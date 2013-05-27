@@ -152,14 +152,8 @@ if(isset($groupid) and intval($groupid)>0 and ($withproblems == 'yes' or $withpr
     $layer = "point\ttitle\tdescription\ticon\n";
 
     foreach($hostids as $hostid) {
-        if($withproblems == 'yes') {
-            if($problems[$hostid] != 'OK') {
-                $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . $problems[$hostid] . "\t" . $icons[$hostid] . "\n";
-            }
-        } elseif($withproblems == 'no') {
-            if($problems[$hostid] == 'OK') {
-                $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . $problems[$hostid] . "\t" . $icons[$hostid] . "\n";
-            }
+        if(($withproblems == 'yes' and $problems[$hostid] != 'OK') or ($withproblems == 'no' and $problems[$hostid] == 'OK')) {
+            $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . $problems[$hostid] . "\t" . $icons[$hostid] . "\n";
         }
     }
 
