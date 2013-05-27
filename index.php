@@ -69,21 +69,20 @@
                         print("\tvar " . $layer . " = new OpenLayers.Layer.Vector( \"" . $groupname . $layer_suffix_name . "\", { strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1})], protocol: new OpenLayers.Protocol.HTTP({ url:\"osm-zabbix.php?type=" . $layer_suffix . "&groupid=" . $groupid . "\", format: new OpenLayers.Format.Text() }) });\n");
                         print("\tmap.addLayer(" . $layer . ");\n");
                         if($layer_suffix == 'ok') { print("\t" . $layer . ".setVisibility(false);\n"); }
-                        print("\t" . $layer . ".events.on({ 'featureselected': onFeatureSelect, 'featureunselected': onFeatureUnselect });\n");
                     }
                 }
-                print("\tselectControl = new OpenLayers.Control.SelectFeature([" . implode(",",$layers) . "], { hover: true });\n");
+                print("\tselectControl = new OpenLayers.Control.SelectFeature([" . implode(",",$layers) . "], { clickout: true, eventListeners: { featurehighlighted: onFeatureSelect, featureunhighlighted: onFeatureUnselect } });\n");
                 print("\tmap.addControl(selectControl);\n");
                 print("\tselectControl.activate();\n");
             ?>
-        /*  function onPopupClose(evt) {
+            function onPopupClose(evt) {
                 var feature = this.feature;
                 if (feature.layer) {
                     selectControl.unselect(feature);
                 } else {
                     this.destroy();
                 }
-            } */
+            }
             function onFeatureSelect(evt) {
                 feature = evt.feature;
                 popup = new OpenLayers.Popup.FramedCloud("featurePopup",
@@ -91,8 +90,7 @@
                                          new OpenLayers.Size(100,100),
                                          "<h2>"+feature.attributes.title + "</h2>" +
                                          feature.attributes.description,
-                                         //null, false, onPopupClose);
-                                         null);
+                                         null, true, onPopupClose);
                 feature.popup = popup;
                 popup.feature = feature;
                 map.addPopup(popup, true);

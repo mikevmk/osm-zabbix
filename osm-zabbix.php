@@ -149,11 +149,12 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
         }
     }
 
+    $details_url = "<br/><a href=\"" . $zbx_url . "/overview.php?&type=0&groupid=" . $groupid . "\">Details</a>";
     $layer = "point\ttitle\tdescription\ticon\n";
 
     foreach($hostids as $hostid) {
         if(($type == 'problems' and $problems[$hostid] != 'OK') or ($type == 'ok' and $problems[$hostid] == 'OK')) {
-            $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . $problems[$hostid] . "\t" . $icons[$hostid] . "\n";
+            $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . "Trigger(s): " . $problems[$hostid] . $details_url . "\t" . $icons[$hostid] . "\n";
         }
     }
 
