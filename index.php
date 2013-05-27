@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="http://openlayers.org/dev/examples/style.css" type="text/css">
     <style type="text/css">
       html, body, #basicMap {
-          width: 95%;
-          height: 95%;
+          width: 90%;
+          height: 90%;
           margin: 2%;
       }
       .olControlLoadingPanel {
@@ -34,7 +34,7 @@
               controls: [
                 new OpenLayers.Control.Navigation(),
                 new OpenLayers.Control.PanZoomBar(),
-                new OpenLayers.Control.LayerSwitcher(),
+                new OpenLayers.Control.LayerSwitcher({'div':OpenLayers.Util.getElement('layerswitcher')}),
                 new OpenLayers.Control.Attribution(),
                 new OpenLayers.Control.LoadingPanel(),
                 new OpenLayers.Control.MousePosition({
@@ -44,8 +44,8 @@
               ]
             };
             map = new OpenLayers.Map("basicMap", options);
-            var mapnik         = new OpenLayers.Layer.OSM();
-            var zoom           = <?php require('osm-zabbix.conf.php'); print($zoom_level); ?>;
+            var mapnik = new OpenLayers.Layer.OSM();
+            var zoom = <?php require('osm-zabbix.conf.php'); print($zoom_level); ?>;
             map.addLayer(mapnik);
             map.setCenter(centerPosition, zoom);
 
@@ -56,23 +56,21 @@
             <?php 
                 require('osm-zabbix.conf.php');
                 require('osm-zabbix.php');
-                
+
                 $api = connect_to_api($zbx_url,$zbx_api_user,$zbx_api_pass);
                 $groupids = get_groupids($api);
                 $layers = array();
-                foreach ($groupids as $groupid) {
+                $layer_suffixes = array('ok' => ' - OK', 'problems' => ' - problems');
+                foreach($groupids as $groupid) {
                     $groupname = get_group_name($api,$groupid);
-                    $layer = "objlayer_" . $groupid . "_ok";
-                    array_push($layers, $layer);
-                    print("\tvar " . $layer . " = new OpenLayers.Layer.Vector( \"" . $groupname . " - OK\", { strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1})], protocol: new OpenLayers.Protocol.HTTP({ url:\"osm-zabbix.php?withproblems=no&groupid=" . $groupid . "\", format: new OpenLayers.Format.Text() }) });\n");
-                    print("\tmap.addLayer(" . $layer . ");\n");
-                    print("\t" . $layer . ".setVisibility(false);\n");
-                    print("\t" . $layer . ".events.on({ 'featureselected': onFeatureSelect, 'featureunselected': onFeatureUnselect });\n");
-                    $layer = "objlayer_" . $groupid . "_problems";
-                    array_push($layers, $layer);
-                    print("\tvar " . $layer . " = new OpenLayers.Layer.Vector( \"" . $groupname . " - problems\", { strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1})], protocol: new OpenLayers.Protocol.HTTP({ url:\"osm-zabbix.php?withproblems=yes&groupid=" . $groupid . "\", format: new OpenLayers.Format.Text() }) });\n");
-                    print("\tmap.addLayer(" . $layer . ");\n");
-                    print("\t" . $layer . ".events.on({ 'featureselected': onFeatureSelect, 'featureunselected': onFeatureUnselect });\n");
+                    foreach($layer_suffixes as $layer_suffix => $layer_suffix_name) {
+                        $layer = "objlayer_" . $groupid . $layer_suffix;
+                        array_push($layers, $layer);
+                        print("\tvar " . $layer . " = new OpenLayers.Layer.Vector( \"" . $groupname . $layer_suffix_name . "\", { strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1})], protocol: new OpenLayers.Protocol.HTTP({ url:\"osm-zabbix.php?type=" . $layer_suffix . "&groupid=" . $groupid . "\", format: new OpenLayers.Format.Text() }) });\n");
+                        print("\tmap.addLayer(" . $layer . ");\n");
+                        if($layer_suffix == 'ok') { print("\t" . $layer . ".setVisibility(false);\n"); }
+                        print("\t" . $layer . ".events.on({ 'featureselected': onFeatureSelect, 'featureunselected': onFeatureUnselect });\n");
+                    }
                 }
                 print("\tselectControl = new OpenLayers.Control.SelectFeature([" . implode(",",$layers) . "], { hover: true });\n");
                 print("\tmap.addControl(selectControl);\n");
@@ -113,7 +111,7 @@
   </head>
   <body onload="init();">
     <h3>Ugly page with map</h3>
-    Only 'problem' layers are shown by default. Use layer switcher in the right upper corner of the map to show/hide layers.
     <div id="basicMap"></div>
+    <div id="layerswitcher" class="olControlLayerSwitcher"></div>
   </body>
 </html>

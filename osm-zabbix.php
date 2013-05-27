@@ -23,7 +23,7 @@ require 'zabbixapi/ZabbixApi.class.php';
 require 'osm-zabbix.conf.php';
 
 $groupid = $_GET["groupid"];
-$withproblems = $_GET["withproblems"];
+$type = $_GET["type"];
 
 function connect_to_api($zbx_url,$zbx_api_user,$zbx_api_pass) {
     try {
@@ -88,11 +88,11 @@ function write_cache($cache_dir,$cache_file,$layer) {
     }
 }
 
-if(isset($groupid) and intval($groupid)>0 and ($withproblems == 'yes' or $withproblems == 'no')) {
+if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'problems')) {
 
     if(isset($cache_dir) and isset($cache_ttl)) {
 
-        $cache_file = $cache_dir . '/layer-' . $groupid . '-' . $withproblems . '.cache';
+        $cache_file = $cache_dir . '/layer-' . $groupid . '-' . $type . '.cache';
 
         if(is_cache_fresh($cache_file,$cache_ttl)) {
             print(file_get_contents($cache_file));
@@ -152,7 +152,7 @@ if(isset($groupid) and intval($groupid)>0 and ($withproblems == 'yes' or $withpr
     $layer = "point\ttitle\tdescription\ticon\n";
 
     foreach($hostids as $hostid) {
-        if(($withproblems == 'yes' and $problems[$hostid] != 'OK') or ($withproblems == 'no' and $problems[$hostid] == 'OK')) {
+        if(($type == 'problems' and $problems[$hostid] != 'OK') or ($type == 'ok' and $problems[$hostid] == 'OK')) {
             $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . $problems[$hostid] . "\t" . $icons[$hostid] . "\n";
         }
     }
