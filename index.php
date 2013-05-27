@@ -108,6 +108,7 @@
     </script>
   </head>
   <body onload="init();">
+    <a href="<?php require('osm-zabbix.conf.php'); print($zbx_url)?>">Zabbix</a>
     <h3>Ugly page with map</h3>
     <div id="basicMap"></div>
     <div id="layerswitcher" class="olControlLayerSwitcher"></div>
