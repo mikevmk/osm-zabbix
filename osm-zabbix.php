@@ -149,7 +149,8 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
         }
     }
 
-    $details_url = "<br/><a href=\"" . $zbx_url . "/overview.php?&type=0&groupid=" . $groupid . "\">Details</a>";
+    $overview_url = "/overview.php?type=0&groupid=" . $groupid . "&request=overview.php%3Ftype%3D0%26groupid%3D" . $groupid;
+    $details_url = "<br/><a href=\"" . $zbx_url . $overview_url . "\">Details</a>";
     $layer = "point\ttitle\tdescription\ticon\n";
 
     foreach($hostids as $hostid) {
