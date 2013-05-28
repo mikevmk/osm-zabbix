@@ -130,11 +130,8 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
             $problem = '';
             foreach($triggers as $trigger) {
                 if($trigger->hosts[0]->hostid == $hostid) {
-                    if(empty($problem)) {
-                        $problem = $trigger->description;
-                    } else {
-                        $problem = $problem . " + " . $trigger->description;
-                    }
+                    $trigger_url = "<a href=\"" . $zbx_url . "/events.php?triggerid=" . $trigger->triggerid . "&hostid=" . $hostid . "&request=events.php%3Ftriggerid%3D" . $trigger->triggerid . "%26hostid%3D" . $hostid . "\">" . $trigger->description . "</a> (till " . date("D M j G:i:s", $trigger->lastchange) . ")<br/>";
+                    $problem = $problem . $trigger_url;
                 }
             }
             if(empty($problem)) {
@@ -150,12 +147,12 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
     }
 
     $overview_url = "/overview.php?type=0&groupid=" . $groupid . "&request=overview.php%3Ftype%3D0%26groupid%3D" . $groupid;
-    $details_url = "<br/><a href=\"" . $zbx_url . $overview_url . "\">Details</a>";
+    $overview_url = "<a href=\"" . $zbx_url . $overview_url . "\">Group overview</a>";
     $layer = "point\ttitle\tdescription\ticon\n";
 
     foreach($hostids as $hostid) {
         if(($type == 'problems' and $problems[$hostid] != 'OK') or ($type == 'ok' and $problems[$hostid] == 'OK')) {
-            $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . "Trigger(s): " . $problems[$hostid] . $details_url . "\t" . $icons[$hostid] . "\n";
+            $layer = $layer . $points[$hostid] . "\t" . $groupname . ": " . $hostnames[$hostid] . "\t" . "Trigger(s): " . $problems[$hostid] . $overview_url . "\t" . $icons[$hostid] . "\n";
         }
     }
 
