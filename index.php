@@ -128,10 +128,10 @@
     </script>
   </head>
   <body onload="init(); checkReloading();">
-    <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">Reload page every 30s</input><br/>
     <a href="<?php require('osm-zabbix.conf.php'); print($zbx_url)?>">Zabbix</a>
     <h3>Ugly page with map</h3>
     <div id="basicMap"></div>
     <div id="layerswitcher" class="olControlLayerSwitcher"></div>
+    <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">Reload page every 30s</input><br/>
   </body>
 </html>
