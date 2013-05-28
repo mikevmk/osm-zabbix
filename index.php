@@ -105,9 +105,30 @@
                 }
             }
         }
+
+        var reloading;
+
+        function checkReloading() {
+            if (window.location.hash=="#autoreload") {
+                reloading=setTimeout("window.location.reload();", 30000);
+                document.getElementById("reloadCB").checked=true;
+            }
+        }
+
+        function toggleAutoRefresh(cb) {
+            if (cb.checked) {
+                window.location.replace("#autoreload");
+                reloading=setTimeout("window.location.reload();", 30000);
+            } else {
+                window.location.replace("#");
+                clearTimeout(reloading);
+            }
+        }
+
     </script>
   </head>
-  <body onload="init();">
+  <body onload="init(); checkReloading();">
+    <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB">Reload page every 30s</input><br/>
     <a href="<?php require('osm-zabbix.conf.php'); print($zbx_url)?>">Zabbix</a>
     <h3>Ugly page with map</h3>
     <div id="basicMap"></div>
