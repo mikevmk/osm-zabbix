@@ -111,7 +111,6 @@ if(isset($groupid) and intval($groupid)>0 and ($withproblems == 'yes' or $withpr
     ));
 
     $triggers = $api->triggerGet(array(
-        'hostids' => $hostids,
         'min_severity' => $zbx_min_severity,
         'only_true' => 'true',
         'expandData' => 'true'
