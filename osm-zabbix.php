@@ -113,7 +113,8 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
     $triggers = $api->triggerGet(array(
         'min_severity' => $zbx_min_severity,
         'only_true' => 'true',
-        'expandData' => 'true'
+        'expandData' => 'true',
+        'filter' => array('value' => '1')
     ));
 
     $hostids = array();
