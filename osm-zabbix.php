@@ -142,7 +142,7 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
                 $problems[$hostid] = $problem;
             }
             $points[$hostid] = $host->inventory->location_lat . "," . $host->inventory->location_lon;
-            $hostnames[$hostid] = $host->name;
+            $hostnames[$hostid] = $host->name . " (" . $host->host . ")";
         }
     }
 
