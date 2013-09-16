@@ -129,7 +129,7 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
             array_push($hostids, $hostid);
             $problem = '';
             foreach($triggers as $trigger) {
-                if($trigger->hosts[0]->hostid == $hostid) {
+                if($trigger->hostid == $hostid) {
                     $trigger_url = "<br/><a href=\"" . $zbx_url . "/events.php?triggerid=" . $trigger->triggerid . "&hostid=" . $hostid . "&request=events.php%3Ftriggerid%3D" . $trigger->triggerid . "%26hostid%3D" . $hostid . "\">" . $trigger->description . "</a> (since " . date("D M j G:i:s", $trigger->lastchange) . ")";
                     $problem = $problem . $trigger_url;
                 }
