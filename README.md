@@ -24,3 +24,8 @@ Discussion
 -------------
 
 * https://www.zabbix.com/forum/showthread.php?t=41141
+
+Donate
+-------------
+
+* BTC: 1FfiS3tFEfDfvhgHfWLXZUwHmEFmMpaZzD
