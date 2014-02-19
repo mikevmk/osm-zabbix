@@ -39,7 +39,7 @@ function get_groupids($api) {
 
     $hosts = $api->hostGet(array(
         'withInventory' => 'true',
-        'selectInventory' => '["location_lat","location_lon"]'
+        'selectInventory' => 'extend'
     ));
 
     $hostids = array();
@@ -106,7 +106,7 @@ if(isset($groupid) and intval($groupid)>0 and ($type == 'ok' or $type == 'proble
 
     $hosts = $api->hostGet(array(
         'withInventory' => 'true',
-        'selectInventory' => '["location_lat","location_lon"]',
+        'selectInventory' => 'extend',
         'groupids' => $groupid
     ));
 
